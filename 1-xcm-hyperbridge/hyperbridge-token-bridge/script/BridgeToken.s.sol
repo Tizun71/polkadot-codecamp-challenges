@@ -15,14 +15,14 @@ contract BridgeToken is Script {
         );
         address token = address(0xA801da100bF16D07F668F4A49E1f71fc54D05177);
         string memory symbol = "USD.h";
-        // address recipient = ; EVM receiver bytes32(uint256(uint160(vm.addr(pk))))
-        bytes32 recipient = bytes32(
-            bytes(
-                hex"421f7c0be86e76f6bf63094ae9cbf239de2643a56f04980f7e55280f198e83"
-            )
-        );
+        bytes32 recipient = bytes32(uint256(uint160(vm.addr(pk))));
+        // bytes32 recipient = bytes32(
+        //     bytes(
+        //         hex"421f7c0be86e76f6bf63094ae9cbf239de2643a56f04980f7e55280f198e83"
+        //     )
+        // );
         uint256 amount = 10000000000000000;
-        uint256 chainId = 4009;
+        uint256 chainId = 11155111;
 
         vm.startBroadcast(pk);
 
@@ -33,7 +33,7 @@ contract BridgeToken is Script {
             symbol,
             amount,
             recipient,
-            StateMachine.kusama(chainId)
+            StateMachine.evm(chainId)
         );
         vm.stopBroadcast();
     }

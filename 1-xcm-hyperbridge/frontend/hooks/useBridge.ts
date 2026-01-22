@@ -2,7 +2,7 @@
 
 import { ethers } from "ethers";
 import { useMetaMask } from "@/hooks/useWallet";
-import TOKEN_BRIDGE from "../abis/TokenBridge.json";
+import bridgeAbi from "../abis/TokenBridge.json";
 import { useTracking } from "./useTracking";
 
 export function useBridge() {
@@ -26,30 +26,31 @@ export function useBridge() {
 
     try {
       await switchChain("0x61");
-      const TOKEN_BRIDGE_CONTRACT_ADDRESS = "0x94B6f130A401B8EB2deEC2e594D5e47B598a0e77";
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(
-          TOKEN_BRIDGE_CONTRACT_ADDRESS,
-          TOKEN_BRIDGE.abi,
-          signer
-        );
 
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(
+        "0xA3A861d8fd9270E188B1594C9CE477C2e98519d5",
+        bridgeAbi,
+        signer
+      );
 
-        const recipient = await signer.getAddress();
-        const amountParsed = ethers.parseUnits(amount, 18);
-        const destChain = ethers.toUtf8Bytes(`EVM-${destChainId}`);
+      console.log(destChainId);
 
-        const tx = await contract.bridgeTokens(
-          token,
-          symbol,
-          amountParsed,
-          recipient,
-          destChain,
-          { value: 0 }
-        );
+      const recipient = await signer.getAddress();
+      const amountParsed = ethers.parseUnits(amount, 18);
+      const destChain = ethers.toUtf8Bytes(`EVM-${destChainId}`);
 
-        const receipt = await tx.wait();
+      const tx = await contract.bridgeTokens(
+        token,
+        symbol,
+        amountParsed,
+        ethers.zeroPadValue(recipient, 32),
+        destChain,
+        { value: 0 }
+      );
+
+      const receipt = await tx.wait();
 
       const assetTeleportedAbi = [
         "event AssetTeleported(bytes32 to, string dest, uint256 amount, bytes32 commitment, address indexed from, bytes32 indexed assetId, bool redeem)"
@@ -91,14 +92,12 @@ export function useBridge() {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      console.log("Approving", amount, "of token", token);
       const erc20 = new ethers.Contract(
         token,
         ["function approve(address spender, uint256 amount) public returns (bool)"],
         signer
       );
-      console.log("ERC20 contract:", erc20);
-      const spender = "0x94B6f130A401B8EB2deEC2e594D5e47B598a0e77";
+      const spender = "0xA3A861d8fd9270E188B1594C9CE477C2e98519d5";
       const amountParsed = ethers.parseUnits(amount, 18);
       const tx = await erc20.approve(spender, amountParsed);
       await tx.wait();
