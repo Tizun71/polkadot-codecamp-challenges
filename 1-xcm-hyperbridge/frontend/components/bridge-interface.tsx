@@ -26,10 +26,9 @@ const createChain = (id: any, name: any, iconPath: any, color: any) => ({
 });
 
 const chains = [
-  createChain("11155111", "Ethereum Sepolia", "1.svg", "from-white-300 to-white-400"),
   createChain("97", "BNB Chain Testnet", "56.svg", "from-yellow-300 to-amber-300"),
-  createChain("dot", "Polkadot", "polkadot.svg", "from-pink-400 to-pink-500"),
-  createChain("10", "Optimism", "10.svg", "from-red-300 to-red-400"),
+  createChain("11155111", "Ethereum Sepolia", "1.svg", "from-white-300 to-white-400"),
+  createChain("dot", "Paseo", "polkadot.svg", "from-pink-400 to-pink-500"),
 ]
 
 export function BridgeInterface() {
@@ -39,9 +38,9 @@ export function BridgeInterface() {
   const [txProgress, setTxProgress] = useState(0)
   const [txIntervalId, setTxIntervalId] = useState<NodeJS.Timeout | null>(null)
   const { bridgeTokens, approveToken } = useBridge();
-  const { trackStatus } = useTracking();
-  const token = "0xa801da100bf16d07f668f4a49e1f71fc54d05177";
-  const symbol = "USDh";
+  const {trackStatus} = useTracking();
+  const token = "0xA801da100bF16D07F668F4A49E1f71fc54D05177";
+  const symbol = "USD.h";
 
   const ensureDistinctChains = (newSource: any, newDest: any) => {
     if (newSource.id === newDest.id) {
@@ -107,13 +106,9 @@ export function BridgeInterface() {
         >
           {/* Header */}
           <div className="flex items-start justify-between mb-8">
-            <h1
-              className="text-5xl font-black text-black italic flex items-center"
-              style={{ fontFamily: "Comic Sans MS, cursive" }}
-            >
-              <Image src="/og-logo.png" alt="Bridge Logo" width={100} height={100} />
-              <span className="ml-2">BRIDGE</span>
-            </h1> 
+            <h1 className="text-5xl font-black text-black italic" style={{ fontFamily: "Comic Sans MS, cursive" }}>
+              BRIDGE
+            </h1>
           </div>
 
           {/* Chain selectors */}
